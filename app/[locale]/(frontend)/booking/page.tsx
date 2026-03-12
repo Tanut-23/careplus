@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { useSearchParams } from 'next/navigation'
 import useSWR from 'swr'
@@ -33,6 +33,18 @@ interface Employee {
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 export default function BookingPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center">
+        <Spinner className="h-8 w-8" />
+      </div>
+    }>
+      <BookingForm />
+    </Suspense>
+  )
+}
+
+function BookingForm() {
   const t = useTranslations('booking')
   const locale = useLocale() as 'th' | 'en'
   const searchParams = useSearchParams()
