@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "booking": "Booking",
+    "tracking": "Tracking",
+    "about": "About Us",
+    "contact": "Contact Us"
+  },
+  "hero": {
+    "title": "Elderly Care Services",
+    "subtitle": "With Care and Expertise",
+    "description": "We provide comprehensive elderly care services with a team of experts who pay attention to every detail.",
+    "cta": "Book Now",
+    "learnMore": "Learn More"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Choose the service that suits you",
+    "viewAll": "View All Services",
+    "bookNow": "Book Now",
+    "perMonth": "per month",
+    "perDay": "per day",
+    "perHour": "per hour"
+  },
+  "booking": {
+    "title": "Book a Service",
+    "subtitle": "Please fill in the information to book a service",
+    "selectService": "Select Service",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time",
+    "customerInfo": "Customer Information",
+    "name": "Full Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "address": "Address",
+    "notes": "Notes",
+    "submit": "Confirm Booking",
+    "success": "Booking Successful",
+    "successMessage": "Your booking has been recorded successfully",
+    "error": "An error occurred. Please try again.",
+    "service": "Service",
+    "employee": "Select Employee",
+    "date": "Date",
+    "time": "Time"
+  },
+  "tracking": {
+    "title": "Track Your Booking",
+    "subtitle": "Check your booking status",
+    "enterBookingId": "Enter Booking ID",
+    "trackingCode": "Tracking Code",
+    "search": "Search",
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "in-progress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "footer": {
+    "description": "Comprehensive elderly care services",
+    "quickLinks": "Quick Links",
+    "contactUs": "Contact Us",
+    "followUs": "Follow Us",
+    "copyright": "All rights reserved"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "search": "Search",
+    "noData": "No data",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "services": "Manage Services",
+    "bookings": "Manage Bookings",
+    "employees": "Manage Employees",
+    "customers": "Manage Customers",
+    "forms": "Manage Forms",
+    "translations": "Manage Translations",
+    "settings": "Settings",
+    "logout": "Logout",
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login",
+      "error": "Invalid email or password"
+    },
+    "stats": {
+      "totalBookings": "Total Bookings",
+      "pendingBookings": "Pending Bookings",
+      "totalCustomers": "Total Customers",
+      "totalEmployees": "Total Employees"
+    }
+  }
+}

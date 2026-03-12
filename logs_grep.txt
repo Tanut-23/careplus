@@ -1,0 +1,6 @@
+./app/api/bookings/route.ts:    console.log('Saving booking with trackingCode:', trackingCode)
+./app/api/bookings/route.ts:    console.log('Returning booking data:', populatedBooking)
+./app/api/customers/route.ts:    console.log('Customer POST body:', body)
+./app/api/customers/route.ts:      console.log('Updated existing customer:', customer._id)
+./app/api/customers/route.ts:    console.log('Created new customer:', customer._id)
+./app/[locale]/(frontend)/booking/page.tsx:      console.log('Booking successful:', bookingData)
