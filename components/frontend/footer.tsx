@@ -13,6 +13,7 @@ export function Footer() {
     { href: '/services', label: tNav('services') },
     { href: '/booking', label: tNav('booking') },
     { href: '/tracking', label: tNav('tracking') },
+    { href: '/reviews', label: tNav('reviews') },
   ]
 
   const currentYear = new Date().getFullYear()

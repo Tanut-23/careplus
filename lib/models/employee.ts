@@ -5,6 +5,7 @@ export interface IEmployee extends Document {
   email: string
   phone: string
   role: string
+  image: string
   isAvailable: boolean
   assignedBookings: Types.ObjectId[]
   createdAt: Date
@@ -17,6 +18,7 @@ const EmployeeSchema = new Schema<IEmployee>(
     email: { type: String, required: true },
     phone: { type: String, required: true },
     role: { type: String, required: true },
+    image: { type: String, default: '' },
     isAvailable: { type: Boolean, default: true },
     assignedBookings: [{ type: Schema.Types.ObjectId, ref: 'Booking' }],
   },

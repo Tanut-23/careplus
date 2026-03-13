@@ -84,7 +84,7 @@ function BookingForm() {
   const formatPhoneNumber = (value: string) => {
     // Remove all non-digits
     const digits = value.replace(/\D/g, '').substring(0, 10)
-    
+
     // Format as 0XX-XXX-XXXX
     let formatted = digits
     if (digits.length > 3 && digits.length <= 6) {
@@ -103,7 +103,7 @@ function BookingForm() {
     if (!formData.serviceId) newErrors.serviceId = locale === 'th' ? 'กรุณาเลือกบริการ' : 'Service is required'
     if (!formData.scheduledDate) newErrors.scheduledDate = locale === 'th' ? 'กรุณาเลือกวันที่' : 'Date is required'
     if (!formData.scheduledTime) newErrors.scheduledTime = locale === 'th' ? 'กรุณาเลือกเวลา' : 'Time is required'
-    
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -127,13 +127,13 @@ function BookingForm() {
           address: formData.address,
         }),
       })
-      
+
       const customerData = await customerRes.json()
-      
+
       // If customer creation fails (e.g. email exists), we might need to handle it.
       // For now, let's assume if it fails it might return the error or we might need to fetch the existing one.
       // But based on current API, if it fails, customerData._id will be missing.
-      
+
       if (!customerRes.ok && !customerData._id) {
         throw new Error(customerData.error || 'Failed to process customer information')
       }
@@ -154,13 +154,13 @@ function BookingForm() {
       })
 
       const bookingData = await bookingRes.json()
-      
+
       if (!bookingRes.ok) {
         throw new Error(bookingData.error || 'Failed to create booking')
       }
 
       console.log('Booking successful:', bookingData)
-      
+
       if (bookingData.trackingCode) {
         setBookingId(bookingData.trackingCode)
         setIsSuccess(true)
@@ -246,7 +246,7 @@ function BookingForm() {
                     </h3>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-2">
-                        <Label htmlFor="customerName">{t('name')} *</Label>
+                        <Label htmlFor="customerName">{t('name')} <span className="text-destructive">*</span></Label>
                         <Input
                           id="customerName"
                           value={formData.customerName}
@@ -259,7 +259,7 @@ function BookingForm() {
                         {errors.customerName && <p className="text-xs text-destructive mt-1">{errors.customerName}</p>}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="customerPhone">{t('phone')} *</Label>
+                        <Label htmlFor="customerPhone">{t('phone')} <span className="text-destructive">*</span></Label>
                         <Input
                           id="customerPhone"
                           type="tel"
@@ -285,7 +285,7 @@ function BookingForm() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="address">{t('address')} *</Label>
+                      <Label htmlFor="address">{t('address')} <span className="text-destructive">*</span></Label>
                       <Textarea
                         id="address"
                         value={formData.address}
@@ -305,7 +305,7 @@ function BookingForm() {
                       {locale === 'th' ? 'เลือกบริการ' : 'Select Service'}
                     </h3>
                     <div className="space-y-2">
-                      <Label htmlFor="service">{t('service')} *</Label>
+                      <Label htmlFor="service">{t('service')} <span className="text-destructive">*</span></Label>
                       {servicesLoading ? (
                         <div className="flex items-center gap-2">
                           <Spinner className="h-4 w-4" />
@@ -378,7 +378,7 @@ function BookingForm() {
                     </h3>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-2">
-                        <Label htmlFor="date">{t('date')} *</Label>
+                        <Label htmlFor="date">{t('date')} <span className="text-destructive">*</span></Label>
                         <Input
                           id="date"
                           type="date"
@@ -393,7 +393,7 @@ function BookingForm() {
                         {errors.scheduledDate && <p className="text-xs text-destructive mt-1">{errors.scheduledDate}</p>}
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="time">{t('time')} *</Label>
+                        <Label htmlFor="time">{t('time')} <span className="text-destructive">*</span></Label>
                         <Input
                           id="time"
                           type="time"
@@ -502,7 +502,7 @@ function BookingForm() {
               </Card>
 
               <Card className="bg-primary/5">
-                <CardContent className="pt-6">
+                <CardContent>
                   <h3 className="mb-2 font-semibold">
                     {locale === 'th' ? 'ต้องการความช่วยเหลือ?' : 'Need help?'}
                   </h3>

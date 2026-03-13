@@ -73,7 +73,7 @@ export default function AdminLoginPage() {
 
             <FieldGroup>
               <Field>
-                <FieldLabel htmlFor="email" >{t('email')} *</FieldLabel>
+                <FieldLabel htmlFor="email" >{t('email')} <span className="text-destructive">*</span></FieldLabel>
                 <Input
                   id="email"
                   type="email"
@@ -90,7 +90,7 @@ export default function AdminLoginPage() {
               </Field>
 
               <Field>
-                <FieldLabel htmlFor="password" >{t('password')} *</FieldLabel>
+                <FieldLabel htmlFor="password" >{t('password')} <span className="text-destructive">*</span></FieldLabel>
                 <Input
                   id="password"
                   type="password"

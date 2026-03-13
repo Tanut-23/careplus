@@ -261,7 +261,7 @@ function FormBuilder({
       <div className="grid gap-4 md:grid-cols-2">
         <FieldGroup>
           <Field>
-            <FieldLabel>ชื่อฟอร์ม (ไทย) *</FieldLabel>
+            <FieldLabel>ชื่อฟอร์ม (ไทย) <span className="text-destructive">*</span></FieldLabel>
             <Input
               value={formData.name.th}
               onChange={(e) => {
@@ -276,7 +276,7 @@ function FormBuilder({
 
         <FieldGroup>
           <Field>
-            <FieldLabel>Form Name (English) *</FieldLabel>
+            <FieldLabel>Form Name (English) <span className="text-destructive">*</span></FieldLabel>
             <Input
               value={formData.name.en}
               onChange={(e) => {
@@ -310,7 +310,7 @@ function FormBuilder({
                   <div className="grid gap-4 md:grid-cols-2">
                     <FieldGroup>
                       <Field>
-                        <FieldLabel>ชื่อฟิลด์ *</FieldLabel>
+                        <FieldLabel>ชื่อฟิลด์ <span className="text-destructive">*</span></FieldLabel>
                         <Input
                           value={field.name}
                           onChange={(e) => {
@@ -350,7 +350,7 @@ function FormBuilder({
                   <div className="grid gap-4 md:grid-cols-2">
                     <FieldGroup>
                       <Field>
-                        <FieldLabel>Label (ไทย) *</FieldLabel>
+                        <FieldLabel>Label (ไทย) <span className="text-destructive">*</span></FieldLabel>
                         <Input
                           value={field.label.th}
                           onChange={(e) => {
@@ -367,7 +367,7 @@ function FormBuilder({
 
                     <FieldGroup>
                       <Field>
-                        <FieldLabel>Label (English) *</FieldLabel>
+                        <FieldLabel>Label (English) <span className="text-destructive">*</span></FieldLabel>
                         <Input
                           value={field.label.en}
                           onChange={(e) => {

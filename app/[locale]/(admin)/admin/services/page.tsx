@@ -414,7 +414,7 @@ function ServiceForm({
       <div className="grid gap-4 md:grid-cols-2">
         <FieldGroup>
           <Field>
-            <FieldLabel>ชื่อบริการ (ไทย) *</FieldLabel>
+            <FieldLabel>ชื่อบริการ (ไทย) <span className="text-destructive">*</span></FieldLabel>
             <Input
               value={formData.name.th}
               onChange={(e) => {
@@ -428,7 +428,7 @@ function ServiceForm({
         </FieldGroup>
         <FieldGroup>
           <Field>
-            <FieldLabel>Service Name (English) *</FieldLabel>
+            <FieldLabel>Service Name (English) <span className="text-destructive">*</span></FieldLabel>
             <Input
               value={formData.name.en}
               onChange={(e) => {
@@ -445,7 +445,7 @@ function ServiceForm({
       <div className="grid gap-4 md:grid-cols-2">
         <FieldGroup>
           <Field>
-            <FieldLabel>รายละเอียด (ไทย) *</FieldLabel>
+            <FieldLabel>รายละเอียด (ไทย) <span className="text-destructive">*</span></FieldLabel>
             <Textarea
               value={formData.description.th}
               onChange={(e) => {
@@ -463,7 +463,7 @@ function ServiceForm({
         </FieldGroup>
         <FieldGroup>
           <Field>
-            <FieldLabel>Description (English) *</FieldLabel>
+            <FieldLabel>Description (English) <span className="text-destructive">*</span></FieldLabel>
             <Textarea
               value={formData.description.en}
               onChange={(e) => {
@@ -484,7 +484,7 @@ function ServiceForm({
       <div className="grid gap-4 md:grid-cols-2">
         <FieldGroup>
           <Field>
-            <FieldLabel>ราคา (บาท) *</FieldLabel>
+            <FieldLabel>ราคา (บาท) <span className="text-destructive">*</span></FieldLabel>
             <Input
               type="number"
               value={formData.price === 0 && !service ? '' : formData.price}
@@ -499,7 +499,7 @@ function ServiceForm({
         </FieldGroup>
         <FieldGroup>
           <Field>
-            <FieldLabel>ระยะเวลา *</FieldLabel>
+            <FieldLabel>ระยะเวลา <span className="text-destructive">*</span></FieldLabel>
             <Input
               value={formData.duration}
               onChange={(e) => {

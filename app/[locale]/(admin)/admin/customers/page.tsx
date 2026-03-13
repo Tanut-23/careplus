@@ -250,7 +250,7 @@ function CustomerForm({
     <form onSubmit={handleSubmit} className="space-y-4">
       <FieldGroup>
         <Field>
-          <FieldLabel>ชื่อ-นามสกุล *</FieldLabel>
+          <FieldLabel>ชื่อ-นามสกุล <span className="text-destructive">*</span></FieldLabel>
           <Input
             value={formData.name}
             onChange={(e) => {
@@ -263,7 +263,7 @@ function CustomerForm({
         </Field>
 
         <Field>
-          <FieldLabel>อีเมล *</FieldLabel>
+          <FieldLabel>อีเมล <span className="text-destructive">*</span></FieldLabel>
           <Input
             type="email"
             value={formData.email}
@@ -277,7 +277,7 @@ function CustomerForm({
         </Field>
 
         <Field>
-          <FieldLabel>เบอร์โทรศัพท์ *</FieldLabel>
+          <FieldLabel>เบอร์โทรศัพท์ <span className="text-destructive">*</span></FieldLabel>
           <Input
             value={formData.phone}
             onChange={(e) => {

@@ -16,6 +16,7 @@ import {
   CheckCircle,
 } from 'lucide-react'
 import { useEffect } from 'react'
+import { ReviewCarousel } from '@/components/frontend/review-carousel'
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -23,6 +24,13 @@ export default function HomePage() {
   const t = useTranslations('hero')
   const tServices = useTranslations('services')
   const locale = useLocale()
+
+  const { data: bookingCount } = useSWR<{ total: number }>('/api/bookings/count', fetcher)
+  const { data: reviews } = useSWR<{ rating: number }[]>('/api/reviews', fetcher)
+
+  const avgRating = reviews?.length
+    ? parseFloat((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)).toString()
+    : null
 
   // Seed data on first load
   useEffect(() => {
@@ -88,8 +96,12 @@ export default function HomePage() {
                         <Users className="h-6 w-6" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold">500+</p>
-                        <p className="text-sm opacity-90">ครอบครัวไว้วางใจ</p>
+                        <p className="text-3xl font-bold">
+                          {bookingCount ? bookingCount.total.toLocaleString() : '—'}
+                        </p>
+                        <p className="text-sm opacity-90">
+                          {locale === 'th' ? 'ยอดการจองทั้งหมด' : 'Total Bookings'}
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -99,7 +111,7 @@ export default function HomePage() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary/20">
                       <Star className="h-6 w-6 text-secondary" />
                     </div>
-                    <p className="mt-3 text-2xl font-bold">4.9/5</p>
+                    <p className="mt-3 text-2xl font-bold">{avgRating ? `${avgRating}/5` : '—'}</p>
                     <p className="text-sm text-muted-foreground">คะแนนรีวิว</p>
                   </CardContent>
                 </Card>
@@ -157,7 +169,7 @@ export default function HomePage() {
             },
           ].map((feature, index) => (
             <Card key={index} className="text-center">
-              <CardContent className="pt-6">
+              <CardContent >
                 <div
                   className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full ${feature.color}`}
                 >
@@ -196,6 +208,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <ReviewCarousel />
+
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20">
         <Card className="overflow-hidden bg-gradient-to-r from-primary to-primary/80 text-primary-foreground">
@@ -213,8 +227,8 @@ export default function HomePage() {
                 <Button asChild size="lg" variant="secondary">
                   <Link href="/booking">{t('cta')}</Link>
                 </Button>
-                <Button asChild size="lg" variant="secondary" >
-                  <a href="tel:02-xxx-xxxx">โทร 02-xxx-xxxx</a>
+                <Button asChild size="lg" variant="secondary">
+                  <Link href="/contact">ติดต่อเรา</Link>
                 </Button>
               </div>
             </div>
@@ -256,8 +270,8 @@ function ServicesGrid({ locale }: { locale: string }) {
         price: number
         duration: string
       }) => (
-        <Card key={service._id} className="group transition-shadow hover:shadow-lg">
-          <CardHeader>
+        <Card key={service._id} className="flex h-full flex-col group transition-shadow hover:shadow-lg">
+          <CardHeader className="flex-1">
             <CardTitle className="text-lg">
               {locale === 'th' ? service.name.th : service.name.en}
             </CardTitle>
@@ -265,7 +279,7 @@ function ServicesGrid({ locale }: { locale: string }) {
               {locale === 'th' ? service.description.th : service.description.en}
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="mt-auto">
             <div className="flex items-baseline gap-1">
               <span className="text-2xl font-bold text-primary">
                 {service.price.toLocaleString()}

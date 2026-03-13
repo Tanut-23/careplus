@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { Clock, DollarSign, Users } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from '@/i18n/routing'
 
 interface Service {
   _id: string
@@ -85,9 +85,9 @@ export default function ServicesPage() {
                     {categoryServices.map((service) => (
                       <Card
                         key={service._id}
-                        className="group transition-all hover:shadow-lg hover:shadow-primary/5"
+                        className="flex h-full flex-col group transition-all hover:shadow-lg hover:shadow-primary/5"
                       >
-                        <CardHeader>
+                        <CardHeader className="flex-1">
                           <div className="flex items-start justify-between">
                             <CardTitle className="text-xl">{service.name[locale]}</CardTitle>
                             <Badge variant="secondary" className="bg-primary/10 text-primary">
@@ -98,7 +98,7 @@ export default function ServicesPage() {
                             {service.description[locale]}
                           </CardDescription>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="mt-auto">
                           <div className="mb-4 flex items-center gap-4 text-sm text-muted-foreground">
                             <div className="flex items-center gap-1">
                               <DollarSign className="h-4 w-4" />

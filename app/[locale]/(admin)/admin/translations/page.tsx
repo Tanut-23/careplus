@@ -275,7 +275,7 @@ function TranslationForm({
       <div className="grid gap-4 md:grid-cols-2">
         <FieldGroup>
           <Field>
-            <FieldLabel>Key *</FieldLabel>
+            <FieldLabel>Key <span className="text-destructive">*</span></FieldLabel>
             <Input
               value={formData.key}
               onChange={(e) => {
@@ -314,7 +314,7 @@ function TranslationForm({
 
       <FieldGroup>
         <Field>
-          <FieldLabel>ข้อความภาษาไทย *</FieldLabel>
+          <FieldLabel>ข้อความภาษาไทย <span className="text-destructive">*</span></FieldLabel>
           <Textarea
             value={formData.th}
             onChange={(e) => {
@@ -330,7 +330,7 @@ function TranslationForm({
 
       <FieldGroup>
         <Field>
-          <FieldLabel>English Text *</FieldLabel>
+          <FieldLabel>English Text <span className="text-destructive">*</span></FieldLabel>
           <Textarea
             value={formData.en}
             onChange={(e) => {

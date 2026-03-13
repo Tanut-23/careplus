@@ -13,6 +13,7 @@ import {
   UserCog,
   FileText,
   Languages,
+  Star,
   LogOut,
   Sun,
   Moon,
@@ -42,6 +43,7 @@ export default function AdminLayout({
     { href: '/admin/employees', icon: UserCog, label: t('employees') },
     { href: '/admin/customers', icon: Users, label: t('customers') },
     { href: '/admin/forms', icon: FileText, label: t('forms') },
+    { href: '/admin/reviews', icon: Star, label: t('reviews') },
     { href: '/admin/translations', icon: Languages, label: t('translations') },
   ]
 

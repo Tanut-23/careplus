@@ -20,6 +20,8 @@ export function Header() {
     { href: '/services', label: t('services') },
     { href: '/booking', label: t('booking') },
     { href: '/tracking', label: t('tracking') },
+    { href: '/contact', label: t('contact') },
+    { href: '/reviews', label: t('reviews') },
   ]
 
   const isActive = (href: string) => {
