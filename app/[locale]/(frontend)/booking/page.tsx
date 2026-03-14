@@ -9,9 +9,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select' // used for service selection
 import { Spinner } from '@/components/ui/spinner'
-import { Calendar, CheckCircle, Clock, User } from 'lucide-react'
+import { Calendar, CheckCircle, Clock, User, UserCircle, ChevronRight, X, ZoomIn, CheckCircle2, ChevronLeft } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 
 interface Service {
@@ -26,6 +26,8 @@ interface Service {
 interface Employee {
   _id: string
   name: string
+  role: string
+  image: string
   specialization: string[]
   isAvailable?: boolean
 }
@@ -72,6 +74,13 @@ function BookingForm() {
   const [isSuccess, setIsSuccess] = useState(false)
   const [bookingId, setBookingId] = useState('')
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
+  const [showEmployeeModal, setShowEmployeeModal] = useState(false)
+  const [zoomImage, setZoomImage] = useState<string | null>(null)
+  const [calendarOpen, setCalendarOpen] = useState(false)
+  const [customTime, setCustomTime] = useState(false)
+  const [calendarMonth, setCalendarMonth] = useState(() => {
+    const d = new Date(); d.setDate(1); return d
+  })
 
   const { toast } = useToast()
 
@@ -109,6 +118,7 @@ function BookingForm() {
   }
 
   const selectedService = services?.find((s) => s._id === formData.serviceId)
+  const selectedEmployee = availableEmployees.find((e) => e._id === formData.employeeId)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -339,34 +349,46 @@ function BookingForm() {
                       )}
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="employee">{t('employee')}</Label>
+                      <Label>{t('employee')}</Label>
                       {employeesLoading ? (
                         <div className="flex items-center gap-2">
                           <Spinner className="h-4 w-4" />
                           <span className="text-sm text-muted-foreground">Loading...</span>
                         </div>
                       ) : (
-                        <Select
-                          value={formData.employeeId}
-                          onValueChange={(value) => setFormData({ ...formData, employeeId: value })}
+                        <button
+                          type="button"
+                          onClick={() => setShowEmployeeModal(true)}
+                          className="flex w-full items-center justify-between rounded-lg border border-input bg-background px-4 py-3 text-left shadow-sm transition-colors hover:bg-accent"
                         >
-                          <SelectTrigger>
-                            <SelectValue placeholder={locale === 'th' ? 'ไม่ระบุ (ให้ระบบเลือก)' : 'No preference'} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {availableEmployees.length > 0 ? (
-                              availableEmployees.map((employee) => (
-                                <SelectItem key={employee._id} value={employee._id}>
-                                  {employee.name}
-                                </SelectItem>
-                              ))
+                          <div className="flex items-center gap-3">
+                            {selectedEmployee ? (
+                              <>
+                                {selectedEmployee.image ? (
+                                  <img src={selectedEmployee.image} alt={selectedEmployee.name} className="h-9 w-9 rounded-full object-cover" />
+                                ) : (
+                                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
+                                    <UserCircle className="h-5 w-5 text-muted-foreground" />
+                                  </div>
+                                )}
+                                <div>
+                                  <p className="text-sm font-medium">{selectedEmployee.name}</p>
+                                  {selectedEmployee.role && <p className="text-xs text-muted-foreground">{selectedEmployee.role}</p>}
+                                </div>
+                              </>
                             ) : (
-                              <SelectItem value="none" disabled>
-                                {locale === 'th' ? 'ไม่มีพนักงานที่พร้อมให้บริการ' : 'No available employees'}
-                              </SelectItem>
+                              <>
+                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
+                                  <UserCircle className="h-5 w-5 text-muted-foreground" />
+                                </div>
+                                <span className="text-sm text-muted-foreground">
+                                  {locale === 'th' ? 'ไม่ระบุ (ให้ระบบเลือก)' : 'No preference'}
+                                </span>
+                              </>
                             )}
-                          </SelectContent>
-                        </Select>
+                          </div>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </button>
                       )}
                     </div>
                   </div>
@@ -376,36 +398,140 @@ function BookingForm() {
                     <h3 className="font-semibold text-foreground">
                       {locale === 'th' ? 'กำหนดวันเวลา' : 'Schedule'}
                     </h3>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="date">{t('date')} <span className="text-destructive">*</span></Label>
-                        <Input
-                          id="date"
-                          type="date"
-                          value={formData.scheduledDate}
-                          onChange={(e) => {
-                            setFormData({ ...formData, scheduledDate: e.target.value })
-                            if (errors.scheduledDate) setErrors({ ...errors, scheduledDate: '' })
+
+                    {/* Date Picker */}
+                    <div className="space-y-2">
+                      <Label>{t('date')} <span className="text-destructive">*</span></Label>
+                      <button
+                        type="button"
+                        onClick={() => setCalendarOpen(!calendarOpen)}
+                        className={`flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left shadow-sm transition-colors hover:bg-accent ${errors.scheduledDate ? 'border-destructive' : 'border-input'}`}
+                      >
+                        <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
+                        <span className={formData.scheduledDate ? 'text-foreground' : 'text-muted-foreground'}>
+                          {formData.scheduledDate
+                            ? new Date(formData.scheduledDate + 'T00:00:00').toLocaleDateString(locale === 'th' ? 'th-TH' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+                            : locale === 'th' ? 'เลือกวันที่' : 'Select date'}
+                        </span>
+                      </button>
+                      {errors.scheduledDate && <p className="text-xs text-destructive">{errors.scheduledDate}</p>}
+
+                      {calendarOpen && (() => {
+                        const today = new Date(); today.setHours(0,0,0,0)
+                        const year = calendarMonth.getFullYear()
+                        const month = calendarMonth.getMonth()
+                        const firstDay = new Date(year, month, 1).getDay()
+                        const daysInMonth = new Date(year, month + 1, 0).getDate()
+                        const monthNames = locale === 'th'
+                          ? ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']
+                          : ['January','February','March','April','May','June','July','August','September','October','November','December']
+                        const dayNames = locale === 'th' ? ['อา','จ','อ','พ','พฤ','ศ','ส'] : ['Su','Mo','Tu','We','Th','Fr','Sa']
+                        return (
+                          <div className="rounded-xl border bg-card p-4 shadow-md">
+                            <div className="mb-3 flex items-center justify-between">
+                              <button type="button" onClick={() => setCalendarMonth(new Date(year, month - 1, 1))} className="rounded-lg p-1.5 hover:bg-accent">
+                                <ChevronLeft className="h-4 w-4" />
+                              </button>
+                              <span className="font-semibold">{monthNames[month]} {locale === 'th' ? year + 543 : year}</span>
+                              <button type="button" onClick={() => setCalendarMonth(new Date(year, month + 1, 1))} className="rounded-lg p-1.5 hover:bg-accent">
+                                <ChevronRight className="h-4 w-4" />
+                              </button>
+                            </div>
+                            <div className="grid grid-cols-7 gap-1 text-center">
+                              {dayNames.map((d) => (
+                                <div key={d} className="py-1 text-xs font-medium text-muted-foreground">{d}</div>
+                              ))}
+                              {Array.from({ length: firstDay }).map((_, i) => <div key={`e${i}`} />)}
+                              {Array.from({ length: daysInMonth }).map((_, i) => {
+                                const day = i + 1
+                                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+                                const dateObj = new Date(year, month, day)
+                                const isPast = dateObj < today
+                                const isSelected = formData.scheduledDate === dateStr
+                                const isToday = dateObj.getTime() === today.getTime()
+                                return (
+                                  <button
+                                    key={day}
+                                    type="button"
+                                    disabled={isPast}
+                                    onClick={() => {
+                                      setFormData({ ...formData, scheduledDate: dateStr })
+                                      if (errors.scheduledDate) setErrors({ ...errors, scheduledDate: '' })
+                                      setCalendarOpen(false)
+                                    }}
+                                    className={`rounded-lg py-1.5 text-sm font-medium transition-colors
+                                      ${isPast ? 'cursor-not-allowed text-muted-foreground/40' : ''}
+                                      ${isSelected ? 'bg-primary text-primary-foreground' : ''}
+                                      ${!isSelected && isToday ? 'border border-primary text-primary' : ''}
+                                      ${!isSelected && !isPast ? 'hover:bg-accent' : ''}
+                                    `}
+                                  >
+                                    {day}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        )
+                      })()}
+                    </div>
+
+                    {/* Time Slots */}
+                    <div className="space-y-2">
+                      <Label>{t('time')} <span className="text-destructive">*</span></Label>
+                      {errors.scheduledTime && <p className="text-xs text-destructive">{errors.scheduledTime}</p>}
+                      <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
+                        {Array.from({ length: 29 }).map((_, i) => {
+                          const hour = Math.floor(i / 2) + 6
+                          const min = i % 2 === 0 ? '00' : '30'
+                          if (hour > 20 || (hour === 20 && min === '30')) return null
+                          const val = `${String(hour).padStart(2, '0')}:${min}`
+                          const isSelected = !customTime && formData.scheduledTime === val
+                          return (
+                            <button
+                              key={val}
+                              type="button"
+                              onClick={() => {
+                                setCustomTime(false)
+                                setFormData({ ...formData, scheduledTime: val })
+                                if (errors.scheduledTime) setErrors({ ...errors, scheduledTime: '' })
+                              }}
+                              className={`rounded-lg border py-2 text-sm font-medium transition-colors
+                                ${isSelected ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary/50 hover:bg-accent'}
+                              `}
+                            >
+                              {val}
+                            </button>
+                          )
+                        })}
+
+                        {/* Custom time */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCustomTime(true)
+                            setFormData({ ...formData, scheduledTime: '' })
                           }}
-                          min={new Date().toISOString().split('T')[0]}
-                          className={errors.scheduledDate ? "border-destructive focus-visible:ring-destructive" : ""}
-                        />
-                        {errors.scheduledDate && <p className="text-xs text-destructive mt-1">{errors.scheduledDate}</p>}
+                          className={`col-span-2 rounded-lg border py-2 text-sm font-medium transition-colors
+                            ${customTime ? 'border-primary bg-primary text-primary-foreground' : 'border-dashed border-border hover:border-primary/50 hover:bg-accent'}
+                          `}
+                        >
+                          {locale === 'th' ? '+ กำหนดเอง' : '+ Custom'}
+                        </button>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="time">{t('time')} <span className="text-destructive">*</span></Label>
-                        <Input
-                          id="time"
+
+                      {customTime && (
+                        <input
                           type="time"
+                          autoFocus
                           value={formData.scheduledTime}
                           onChange={(e) => {
                             setFormData({ ...formData, scheduledTime: e.target.value })
                             if (errors.scheduledTime) setErrors({ ...errors, scheduledTime: '' })
                           }}
-                          className={errors.scheduledTime ? "border-destructive focus-visible:ring-destructive" : ""}
+                          className="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
                         />
-                        {errors.scheduledTime && <p className="text-xs text-destructive mt-1">{errors.scheduledTime}</p>}
-                      </div>
+                      )}
                     </div>
                   </div>
 
@@ -454,6 +580,29 @@ function BookingForm() {
                           <p className="text-sm text-muted-foreground">{selectedService.description[locale]}</p>
                         </div>
                       </div>
+
+                      {selectedEmployee && (
+                        <div className="flex items-center gap-3">
+                          {selectedEmployee.image ? (
+                            <img
+                              src={selectedEmployee.image}
+                              alt={selectedEmployee.name}
+                              className="h-10 w-10 rounded-full object-cover ring-2 ring-primary/20"
+                            />
+                          ) : (
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted ring-2 ring-border">
+                              <UserCircle className="h-6 w-6 text-muted-foreground" />
+                            </div>
+                          )}
+                          <div>
+                            <p className="text-sm text-muted-foreground">{locale === 'th' ? 'พนักงาน' : 'Staff'}</p>
+                            <p className="font-medium">{selectedEmployee.name}</p>
+                            {selectedEmployee.role && (
+                              <p className="text-xs text-muted-foreground">{selectedEmployee.role}</p>
+                            )}
+                          </div>
+                        </div>
+                      )}
                       <div className="flex items-center gap-3">
                         <div className="rounded-lg bg-secondary/50 p-2">
                           <Clock className="h-5 w-5 text-secondary-foreground" />
@@ -518,6 +667,99 @@ function BookingForm() {
           </div>
         </div>
       </section>
+
+      {/* Employee Picker Modal */}
+      {showEmployeeModal && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 sm:items-center" onClick={() => setShowEmployeeModal(false)}>
+          <div
+            className="w-full max-w-lg rounded-t-2xl bg-background p-6 shadow-xl sm:rounded-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">
+                {locale === 'th' ? 'เลือกพนักงาน' : 'Select Staff'}
+              </h2>
+              <button type="button" onClick={() => setShowEmployeeModal(false)} className="rounded-full p-1 hover:bg-muted">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="max-h-[60vh] overflow-y-auto space-y-2 pr-1">
+              {/* No preference */}
+              <button
+                type="button"
+                onClick={() => { setFormData({ ...formData, employeeId: '' }); setShowEmployeeModal(false) }}
+                className={`flex w-full items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-all ${
+                  formData.employeeId === '' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/40'
+                }`}
+              >
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-muted">
+                  <UserCircle className="h-7 w-7 text-muted-foreground" />
+                </div>
+                <span className="font-medium">{locale === 'th' ? 'ไม่ระบุ (ให้ระบบเลือก)' : 'No preference'}</span>
+                {formData.employeeId === '' && <CheckCircle2 className="ml-auto h-5 w-5 text-primary" />}
+              </button>
+
+              {availableEmployees.map((employee) => (
+                <div
+                  key={employee._id}
+                  className={`flex w-full items-center gap-3 rounded-xl border-2 px-4 py-3 transition-all ${
+                    formData.employeeId === employee._id ? 'border-primary bg-primary/5' : 'border-border'
+                  }`}
+                >
+                  {/* Avatar — click to zoom */}
+                  <button
+                    type="button"
+                    className="relative shrink-0 group"
+                    onClick={() => employee.image && setZoomImage(employee.image)}
+                    disabled={!employee.image}
+                  >
+                    {employee.image ? (
+                      <>
+                        <img src={employee.image} alt={employee.name} className="h-12 w-12 rounded-full object-cover" />
+                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/0 transition-all group-hover:bg-black/30">
+                          <ZoomIn className="h-4 w-4 text-white opacity-0 group-hover:opacity-100" />
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                        <UserCircle className="h-7 w-7 text-muted-foreground" />
+                      </div>
+                    )}
+                  </button>
+
+                  {/* Info — click to select */}
+                  <button
+                    type="button"
+                    className="flex flex-1 flex-col text-left"
+                    onClick={() => { setFormData({ ...formData, employeeId: employee._id }); setShowEmployeeModal(false) }}
+                  >
+                    <span className="font-medium">{employee.name}</span>
+                    {employee.role && <span className="text-sm text-muted-foreground">{employee.role}</span>}
+                  </button>
+
+                  {formData.employeeId === employee._id && <CheckCircle2 className="ml-auto shrink-0 h-5 w-5 text-primary" />}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Zoom Image Modal */}
+      {zoomImage && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80" onClick={() => setZoomImage(null)}>
+          <button type="button" className="absolute right-4 top-4 rounded-full bg-white/10 p-2 hover:bg-white/20" onClick={() => setZoomImage(null)}>
+            <X className="h-6 w-6 text-white" />
+          </button>
+          <img
+            src={zoomImage}
+            alt="employee"
+            className="max-h-[80vh] max-w-[80vw] rounded-2xl object-contain shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </main>
   )
 }

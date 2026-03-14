@@ -11,6 +11,7 @@ import {
   Shield,
   Clock,
   Users,
+  // Clock kept for Features section
   Star,
   ArrowRight,
   CheckCircle,
@@ -27,6 +28,7 @@ export default function HomePage() {
 
   const { data: bookingCount } = useSWR<{ total: number }>('/api/bookings/count', fetcher)
   const { data: reviews } = useSWR<{ rating: number }[]>('/api/reviews', fetcher)
+  const { data: employees } = useSWR<{ isAvailable: boolean }[]>('/api/employees?available=true', fetcher)
 
   const avgRating = reviews?.length
     ? parseFloat((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)).toString()
@@ -118,10 +120,14 @@ export default function HomePage() {
                 <Card>
                   <CardContent className="p-6">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                      <Clock className="h-6 w-6 text-primary" />
+                      <Users className="h-6 w-6 text-primary" />
                     </div>
-                    <p className="mt-3 text-2xl font-bold">10+</p>
-                    <p className="text-sm text-muted-foreground">ปีประสบการณ์</p>
+                    <p className="mt-3 text-2xl font-bold">
+                      {employees ? employees.length : '—'}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {locale === 'th' ? 'พนักงานพร้อมทำงาน' : 'Available Staff'}
+                    </p>
                   </CardContent>
                 </Card>
               </div>
